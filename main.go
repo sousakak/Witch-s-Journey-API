@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"text/template"
 
 	"github.com/joho/godotenv"
 
@@ -12,7 +14,7 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-func main() {
+func mainHandler(w http.ResponseWriter, r *http.Request) {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Printf("環境変数の読み込みに失敗しました: %v", err)
@@ -48,5 +50,21 @@ func main() {
 		jsonfile += `` + data[0].(string) + `: {"witch-name":` + data[1].(string) + `,"called-name":` + data[2].(string) + `,"description":` + data[3].(string) + `,"chapter":` + data[4].(string) + `},`
 	}
 	jsonfile += `}`
-	fmt.Print(jsonfile)
+
+	t, err := template.ParseFiles("index.html")
+	if err != nil {
+		panic(err.Error())
+	}
+	if err := t.Execute(w, struct {
+		json string
+	}{
+		json: jsonfile,
+	}); err != nil {
+		panic(err.Error())
+	}
+}
+
+func main() {
+	http.HandleFunc("/", mainHandler)
+	http.ListenAndServe(":0", nil)
 }
