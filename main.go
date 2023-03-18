@@ -60,7 +60,6 @@ func Api() string {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(bytes))
 	return string(bytes)
 }
 
