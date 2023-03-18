@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -14,6 +15,9 @@ import (
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
 )
+
+//go:embed styles/*
+var styles embed.FS
 
 type Data struct {
 	Name        string `json:"name"`
@@ -84,5 +88,6 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", mainHandler)
 	http.HandleFunc("/api/", apiHandler)
+	http.Handle("/styles/", http.FileServer(http.FS(styles)))
 	http.ListenAndServe(":8080", nil)
 }
