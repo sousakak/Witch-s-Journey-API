@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,14 +15,20 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-func mainHandler(w http.ResponseWriter, r *http.Request) {
+type Data struct {
+	Name        string `json:"name"`
+	Witch_name  string `json:"witch_name"`
+	Called_name string `json:"called_name"`
+	Desc        string `json:"desc"`
+	Chap        string `json:"chap"`
+}
+
+func Api() string {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Printf("環境変数の読み込みに失敗しました: %v", err)
 	}
-
 	var spreadsheetID = os.Getenv("DATABASE")
-
 	credential := option.WithCredentialsFile("client_secret.json")
 	srv, err := sheets.NewService(context.TODO(), credential)
 	if err != nil {
@@ -35,36 +42,48 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	if len(resp.Values) == 0 {
 		log.Fatalln("data not found")
 	}
-	var jsonfile string
-	jsonfile += `{`
-	for _, row := range resp.Values {
-		data := make([]interface{}, 5)
-		for i := 0; i < 5; i++ {
-			if (i + 1) > len(row) {
-				data[i] = ""
-			} else {
-				data[i] = row[i]
-			}
-		}
-		data = append(data, row)
-		jsonfile += `` + data[0].(string) + `: {"witch-name":` + data[1].(string) + `,"called-name":` + data[2].(string) + `,"description":` + data[3].(string) + `,"chapter":` + data[4].(string) + `},`
-	}
-	jsonfile += `}`
 
+	raw_datas := []Data{}
+	for index, row := range resp.Values {
+		if index == 0 {
+			continue
+		}
+		for len(row) < 5 {
+			row = append(row, "")
+		}
+		single_data := Data{Name: row[0].(string), Witch_name: row[1].(string), Called_name: row[2].(string), Desc: row[3].(string), Chap: row[4].(string)}
+		raw_datas = append(raw_datas, single_data)
+	}
+
+	bytes, err := json.Marshal(raw_datas)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(bytes))
+	return string(bytes)
+}
+
+func mainHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("index.html")
 	if err != nil {
 		panic(err.Error())
 	}
-	if err := t.Execute(w, struct {
-		json string
-	}{
-		json: jsonfile,
-	}); err != nil {
+	if err := t.Execute(w, nil); err != nil {
 		panic(err.Error())
+	}
+}
+
+func apiHandler(w http.ResponseWriter, r *http.Request) {
+	json_file := Api()
+	_, err := fmt.Fprint(w, json_file)
+	if err != nil {
+		return
 	}
 }
 
 func main() {
 	http.HandleFunc("/", mainHandler)
-	http.ListenAndServe(":0", nil)
+	http.HandleFunc("/api/", apiHandler)
+	http.ListenAndServe(":8080", nil)
 }
