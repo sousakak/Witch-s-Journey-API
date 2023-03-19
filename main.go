@@ -1,3 +1,10 @@
+// ███╗░░░███╗░█████╗░██╗███╗░░██╗░░░░██████╗░░█████╗░
+// ████╗░████║██╔══██╗██║████╗░██║░░░██╔════╝░██╔══██╗
+// ██╔████╔██║███████║██║██╔██╗██║░░░██║░░██╗░██║░░██║
+// ██║╚██╔╝██║██╔══██║██║██║╚████║░░░██║░░╚██╗██║░░██║
+// ██║░╚═╝░██║██║░░██║██║██║░╚███║██╗╚██████╔╝╚█████╔╝
+// ╚═╝░░░░░╚═╝╚═╝░░╚═╝╚═╝╚═╝░░╚══╝╚═╝░╚═════╝░░╚════╝░
+
 package main
 
 import (
@@ -16,8 +23,8 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-//go:embed styles/*
-var styles embed.FS
+//go:embed assets/*
+var assets embed.FS
 
 type Data struct {
 	Name        string `json:"name"`
@@ -25,6 +32,10 @@ type Data struct {
 	Called_name string `json:"called_name"`
 	Desc        string `json:"desc"`
 	Chap        string `json:"chap"`
+}
+
+type IndexPage struct {
+	Lang string
 }
 
 func Api() string {
@@ -69,10 +80,11 @@ func Api() string {
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("index.html")
+	local_index := &IndexPage{"ja"}
 	if err != nil {
 		panic(err.Error())
 	}
-	if err := t.Execute(w, nil); err != nil {
+	if err := t.Execute(w, local_index); err != nil {
 		panic(err.Error())
 	}
 }
@@ -88,6 +100,6 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", mainHandler)
 	http.HandleFunc("/api/", apiHandler)
-	http.Handle("/styles/", http.FileServer(http.FS(styles)))
+	http.Handle("/assets/", http.FileServer(http.FS(assets)))
 	http.ListenAndServe(":8080", nil)
 }
