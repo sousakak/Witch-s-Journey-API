@@ -391,4 +391,78 @@ main .carousel__title span:after {
   background: -webkit-gradient(linear, left top, right top, from(rgba(25, 25, 25, 0.8)), to(transparent));
   background: linear-gradient(to right, rgba(25, 25, 25, 0.8), transparent);
 }
+
+main .accordion .accordion-box {
+  background-color: #fefefe;
+  margin: 10px auto;
+  padding: 10px;
+  -webkit-box-shadow: 0 2px 1px -1px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)), 0 1px 1px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)), 0 1px 3px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+          box-shadow: 0 2px 1px -1px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)), 0 1px 1px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)), 0 1px 3px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12));
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: 4px;
+  line-height: 1.25rem;
+}
+
+main .accordion .accordion-box .accordion-toggle {
+  display: none;
+}
+
+main .accordion .accordion-box .accordion-toggle:checked + .accordion-label {
+  margin-bottom: 3px;
+  font-weight: bold;
+}
+
+main .accordion .accordion-box .accordion-toggle:checked + .accordion-label::before {
+  -webkit-transform: rotate(-45deg) !important;
+          transform: rotate(-45deg) !important;
+}
+
+main .accordion .accordion-box .accordion-toggle:checked + .accordion-label + .accordion-content {
+  height: auto;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  border-top: 1px solid;
+  -o-border-image: linear-gradient(to right, transparent, #989898, transparent);
+     border-image: -webkit-gradient(linear, left top, right top, from(transparent), color-stop(#989898), to(transparent));
+     border-image: linear-gradient(to right, transparent, #989898, transparent);
+  border-image-slice: 1;
+  margin-top: 3px;
+  padding-top: 3px;
+}
+
+main .accordion .accordion-box .accordion-label {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  display: block;
+}
+
+main .accordion .accordion-box .accordion-label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-top: 2px solid #000;
+  border-right: 2px solid #000;
+  -webkit-transform: rotate(45deg);
+  position: absolute;
+  top: calc( 50% - 3px);
+  right: 20px;
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+
+main .accordion .accordion-box .accordion-content {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  height: 0;
+  overflow: hidden;
+}
 /*# sourceMappingURL=styles.css.map */

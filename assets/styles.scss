@@ -268,6 +268,17 @@ $container-box-background: radial-gradient(circle farthest-side at 0% 3%, rgba(2
 }
 /* End of carousel.sass */
 
+@mixin section-box {
+    background-color: rgba($color: #FEFEFE, $alpha: 1);
+    margin: 10px auto;
+    padding: 10px;
+    box-shadow: 0 2px 1px -1px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, .2)),0 1px 1px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, .14)),0 1px 3px 0 var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, .12));
+    overflow: hidden;
+    overflow-wrap: break-word;
+    border-radius: 4px;
+    line-height: 1.25rem;
+}
+
 body {
     background-image: linear-gradient(-45deg, #f9f8f7 25%, #ffffff 25%, #ffffff 50%, #f9f8f7  50%, #f9f8f7 75%, #ffffff 75%, #ffffff);
 }
@@ -362,4 +373,55 @@ main {
     @include carousel(5);
     max-width: 900px;
     margin: 0 auto;
+    .accordion {
+        @mixin hidden-accordion() {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            transition: all 1s;
+        }
+        .accordion-box {
+            @include section-box();
+            .accordion-toggle {
+                display: none;
+                &:checked + .accordion-label {
+                    margin-bottom: 3px;
+                    font-weight: bold;
+                    &::before {
+                        transform: rotate(-45deg) !important;
+                    }
+                }
+                &:checked + .accordion-label + .accordion-content {
+                    height: auto;
+                    transition: all 1s;
+                    border-top: 1px solid;
+                    border-image: linear-gradient(to right, transparent, #989898, transparent);
+                    border-image-slice: 1;
+                    margin-top: 3px;
+                    padding-top: 3px;
+                }
+            }
+            .accordion-label {
+                @include hidden-accordion();
+                display: block;
+                &::before {
+                    content:"";
+                    width: 6px;
+                    height: 6px;
+                    border-top: 2px solid #000;
+                    border-right: 2px solid #000;
+                    -webkit-transform: rotate(45deg);
+                    position: absolute;
+                    top: calc( 50% - 3px );
+                    right: 20px;
+                    transform: rotate(135deg);
+                }
+            }
+            .accordion-content {
+                @include hidden-accordion();
+                height: 0;
+                overflow: hidden;
+            }
+        }
+    }
 }

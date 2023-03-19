@@ -16,6 +16,16 @@ header, footer, main, nav, article, aside, section {
     display: block;
 }
 
+ul {
+    padding-left: 1.5em;
+    list-style-type: circle;
+}
+
+hr {
+    border-image: linear-gradient(to right, transparent, #989898, transparent);
+    border-image-slice: 1;
+}
+
 a {
     text-decoration: none !important;
 }
