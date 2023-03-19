@@ -1,0 +1,4 @@
+# languages
+*.html linguist-documentation
+*.scss linguist-documentation
+*.css linguist-documentation
