@@ -4,7 +4,7 @@
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="text/javascript" src="./assets/scripts.js" defer></script>
+        <script type="text/javascript" src="./assets/scripts.js" async></script>
         <link rel='stylesheet' href='./assets/reset.css'>
         <link rel='stylesheet' href='./assets/styles.css'>
         <title>Witch's Journey API</title>
@@ -31,8 +31,8 @@
                     <a href="#" class="header-list-dropdown-button">Links</a>
                     <ul class="header-list-dropdown-ul">
                         <li class="header-list-dropdown-li">
-                            <a href="#" class="header-list-dropdown-item">Discord</a>
-                            <a href="#" class="header-list-dropdown-item">Twitter</a>
+                            <a href="#" class="header-list-dropdown-item ext-link">Discord</a>
+                            <a href="#" class="header-list-dropdown-item ext-link">Twitter</a>
                         </li>
                     </ul>
                 </li>
@@ -67,11 +67,11 @@
                     <label for="carousel-5"></label>
                 </div>
                 <div class="carousel__nav">
-                    <label for="carousel-1"></label>
-                    <label for="carousel-2"></label>
-                    <label for="carousel-3"></label>
-                    <label for="carousel-4"></label>
-                    <label for="carousel-5"></label>
+                    <label for="carousel-1">1</label>
+                    <label for="carousel-2">2</label>
+                    <label for="carousel-3">3</label>
+                    <label for="carousel-4">4</label>
+                    <label for="carousel-5">5</label>
                 </div>
                 <div class="carousel__title">
                     <span>
@@ -113,7 +113,112 @@
                     </div>
                 </section>
                 <hr />
+                <section class="content-section">
+                    <div class="content-card">
+                        <div class="content-pagetitle headline">
+                            <h1>
+                                {{- if eq .Lang "en" }}
+                                    Welcome to the Journey of Elaina API Portal!
+                                {{- else if eq .Lang "ja"}}
+                                    魔女の旅々APIポータルへようこそ！
+                                {{- else}}
+                                    Welcome to the Journey of Elaina API Portal!
+                                {{- end}}
+                            </h1>
+                        </div>
+                    </div>
+                </section>
+                <section class="content-section">
+                    <div class="content-card">
+                        <div class="content-text">
+                            <p>
+                                {{- if eq .Lang "en" }}
+                                    This is an API that provides information on characters from the anime "Witches' Journey". As stated at the beginning, this project is unofficial by the fans.
+                                {{- else if eq .Lang "ja"}}
+                                    アニメ・ライトノベル・漫画である『魔女の旅々』に登場するキャラクターの情報APIです。冒頭にもある通り、これはファンによる非公式なプロジェクトです。
+                                {{- else }}
+                                    This is an API that provides information on characters from "The Journey of Elaina", which is an anime, a light novel and comic. As stated at the beginning, this project is unofficial by the fans.
+                                {{- end}}
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section class="content-section">
+                    <div class="content-card">
+                        <div class="content-card-title">
+                            <h2 class="content-card-headline headline">
+                                <span>
+                                    {{- if eq .Lang "en" }}
+                                        Usage
+                                    {{- else if eq .Lang "ja"}}
+                                        利用方法
+                                    {{- else}}
+                                        Usage
+                                    {{- end}}
+                                </span>
+                            </h2>
+                        </div>
+                        <div class="content-text">
+                            <p>
+                                {{- if eq .Lang "en" }}
+                                    <!--  -->
+                                {{- else if eq .Lang "ja"}}
+                                    APIは、URLで指定することによりデータを返します。データはJSON形式です。
+                                    <ul>
+                                        <li>
+                                            <a href="/api">/api</a> — キャラクターについての全てのリストを返します。
+                                        </li>
+                                    </ul>
+                                {{- else}}
+                                    <!--  -->
+                                {{- end}}
+                            </p>
+                        </div>
+                    </div>
+                </section>
             </article>
         </main>
+        <footer class="footer">
+            <div class="waves-div">
+                <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                    <defs>
+                        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                    </defs>
+                    <g class="parallax">
+                        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(144, 245, 154, 0.7)" />
+                        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(144, 245, 154, 0.5)" />
+                        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(144, 245, 154, 0.3)" />
+                        <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(144, 245, 154, 1)" />
+                    </g>
+                </svg>
+            </div>
+            <div class="footer-content">
+                ©ジュース飲みたい 2023
+            </div>
+        </footer>
+        <overlay>
+            <div class="overlay-screen ext-link-overlay">
+                <div class="overlay-box">
+                    <div class="overlay-title ext-link-overlay-title">
+                        {{- if eq .Lang "en" }}
+                            External Link
+                        {{- else if eq .Lang "ja"}}
+                            外部リンク
+                        {{- else}}
+                            External Link
+                        {{- end}}
+                    </div>
+                    <div class="overlay-text ext-link-overlay-text">
+                        {{- if eq .Lang "en" }}
+                            <!--  -->
+                        {{- else if eq .Lang "ja"}}
+                            外部サイトへのリンクがクリックされました。移動してよろしいですか？
+                        {{- else}}
+                            <!--  -->
+                        {{- end}}
+                    </div>
+                </div>
+            </div>
+        </overlay>
     </body>
 </html>

@@ -30,6 +30,10 @@ a {
     text-decoration: none !important;
 }
 
+h2 {
+    font-size: 20px;
+}
+
 ::selection {
     background-color: rgba(152, 251, 152, 0.3);
     color: rgb(0, 128, 128);
