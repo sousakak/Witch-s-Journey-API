@@ -7,12 +7,34 @@
 ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░╚═════╝░╚═╝░╚════╝░╚═════╝░
 **********************************************************************/
 $(function(){
+    // overlay
+    function overlay_action(elem, action) {
+        $('.overlay-button-close').on('click', function() {
+            $('.ext-link-overlay').fadeOut();
+            return false;
+        });
+        $('.overlay-screen').click(function() {
+            $('.ext-link-overlay').fadeOut();
+            return false;
+        });
+        $('.overlay-box').click(function(event){
+            event.stopPropagation();
+            return false;
+        });
+        $('.overlay-button-action').click(function() {
+            $('.ext-link-overlay').fadeOut();
+            action(elem);
+            return true;
+        });
+    }
+
     $('.content-section').each(function() {
         if ($(window).height() > $(this).offset().top + 200) {
             $(this).addClass('loaded');
         }
     });
 
+    // make header list link
     $('.header-list-li').click(function() {
         var index = jQuery(this).index()
         var link = $('.header-list-li').eq(index).children('a').attr("href");
@@ -23,8 +45,15 @@ $(function(){
         location.href = "/";
     });
 
-    $('.ext-link1').click(function() {
-        // content
+    // ext link overlay
+    $('.ext-link').click(function() {
+        $(".ext-link-overlay").fadeIn();
+        action = function(elem) {
+            window.open(elem, "_blank");
+            return false;
+        }
+        result = overlay_action(this, action);
+        return false;
     });
 
     // when scrolled

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang='{{ .Lang }}'>
     <head>
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -31,7 +31,7 @@
                     <a href="#" class="header-list-dropdown-button">Links</a>
                     <ul class="header-list-dropdown-ul">
                         <li class="header-list-dropdown-li">
-                            <a href="#" class="header-list-dropdown-item ext-link">Discord</a>
+                            <a href="https://discord.com/app/invite-with-guild-onboarding/dgwdyzQ6bu" class="header-list-dropdown-item ext-link">Discord</a><!--  -->
                             <a href="#" class="header-list-dropdown-item ext-link">Twitter</a>
                         </li>
                     </ul>
@@ -193,7 +193,7 @@
                 </svg>
             </div>
             <div class="footer-content">
-                ©ジュース飲みたい 2023
+                &copy; 2023 sousakak
             </div>
         </footer>
         <overlay>
@@ -216,6 +216,32 @@
                         {{- else}}
                             <!--  -->
                         {{- end}}
+                    </div>
+                    <div class="overlay-button-box">
+                        <div class="overlay-button-close-box overlay-button-one-box">
+                            <button class="overlay-button-close overlay-button ext-link-overlay-button-close" type="button">
+                                <a class="overlay-button-close-link overlay-button-link">
+                                    {{- if eq .Lang "en" }}
+                                        Close
+                                    {{- else if eq .Lang "ja"}}
+                                        閉じる
+                                    {{- else}}
+                                        Close
+                                    {{- end}}
+                                </a>
+                            </button>
+                            <button class="overlay-button-action overlay-button ext-link-overlay-button-open" type="button">
+                                <a class="overlay-button-action-link overlay-button-link">
+                                    {{- if eq .Lang "en" }}
+                                        Open
+                                    {{- else if eq .Lang "ja"}}
+                                        開く
+                                    {{- else}}
+                                        Open
+                                    {{- end}}
+                                </a>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
