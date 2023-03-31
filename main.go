@@ -38,7 +38,7 @@ type IndexPage struct {
 	Lang string
 }
 
-func Api() string {
+func Api(sheet string, char string, elem string) string {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Printf("環境変数の読み込みに失敗しました: %v", err)
@@ -49,7 +49,7 @@ func Api() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	readRange := "イレイナ!A:E"
+	readRange := sheet + "!A:E"
 	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
 	if err != nil {
 		log.Fatalln(err)
@@ -79,6 +79,11 @@ func Api() string {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	t, err := template.ParseFiles("index.html")
 	local_index := &IndexPage{"ja"}
 	if err != nil {
@@ -90,7 +95,34 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
-	json_file := Api()
+	sheet := "イレイナ"
+	char := ""
+	elem := ""
+	switch r.URL.Path {
+	case "/api/":
+		if r.URL.Query().Get("character") != "" {
+			char = r.URL.Query().Get("character")
+			fmt.Printf("char")
+		}
+		if r.URL.Query().Get("element") != "" {
+			char = r.URL.Query().Get("element")
+			fmt.Printf("elem")
+		}
+	case "/api/イレイナ", "/api/サヤ", "/api/白石定規":
+		sheet = r.URL.Path[5:]
+		if r.URL.Query().Get("character") != "" {
+			char = r.URL.Query().Get("character")
+			fmt.Printf("char")
+		}
+		if r.URL.Query().Get("element") != "" {
+			char = r.URL.Query().Get("element")
+			fmt.Printf("elem")
+		}
+	default:
+		http.NotFound(w, r)
+		return
+	}
+	json_file := Api(sheet, char, elem)
 	_, err := fmt.Fprint(w, json_file)
 	if err != nil {
 		return
