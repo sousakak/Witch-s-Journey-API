@@ -8,6 +8,7 @@
 package main
 
 import (
+	"Witchs-Journey-API/utilities"
 	"context"
 	"embed"
 	"encoding/json"
@@ -195,9 +196,14 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	local_index := &IndexPage{"ja"}
+	var local_index *IndexPage
 	if r.URL.Query().Get("lang") != "" {
 		local_index = &IndexPage{r.URL.Query().Get("lang")}
+		utilities.SetLangCookies(w, r.URL.Query().Get("lang"))
+	} else if utilities.GetCookie(r) != nil {
+		local_index = &IndexPage{utilities.GetCookie(r).Value}
+	} else {
+		local_index = &IndexPage{"en"}
 	}
 
 	t, err := template.ParseFiles("index.html")
