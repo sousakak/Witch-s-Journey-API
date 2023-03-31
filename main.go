@@ -15,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"text/template"
 
 	"github.com/joho/godotenv"
@@ -108,8 +109,18 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			char = r.URL.Query().Get("element")
 			fmt.Printf("elem")
 		}
-	case "/api/イレイナ", "/api/サヤ", "/api/白石定規":
+	case "/api/イレイナ", "/api/サヤ", "/api/白石定規", "/api/elaina", "/api/saya", "/api/jogi":
 		sheet = r.URL.Path[5:]
+		if m, _ := regexp.MatchString("[a-z]", sheet); m {
+			switch sheet {
+			case "elaina":
+				sheet = "イレイナ"
+			case "saya":
+				sheet = "サヤ"
+			case "jogi":
+				sheet = "白石定規"
+			}
+		}
 		if r.URL.Query().Get("character") != "" {
 			char = r.URL.Query().Get("character")
 			fmt.Printf("char")
