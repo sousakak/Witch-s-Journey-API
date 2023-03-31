@@ -11,6 +11,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -79,7 +80,6 @@ func Api(params Params) string {
 				break
 			}
 		}
-		println(params.elem)
 		if rownum != -1 {
 			targetRow := params.sheet + "!A" + strconv.Itoa(rownum) + ":E" + strconv.Itoa(rownum)
 			rowresp, err := srv.Spreadsheets.Values.Get(spreadsheetID, targetRow).Do()
@@ -106,7 +106,7 @@ func Api(params Params) string {
 					}
 				}
 				if elemIndex != -1 {
-					single_datas = rowresp.Values[0][elemIndex].(string)
+					single_datas = "[\"" + rowresp.Values[0][elemIndex].(string) + "\"]"
 				}
 			} else {
 				v := rowresp.Values[0]
@@ -116,6 +116,47 @@ func Api(params Params) string {
 				raw_datas = append(raw_datas, Data{Name: v[0].(string), Witch_name: v[1].(string), Called_name: v[2].(string), Desc: v[3].(string), Chap: v[4].(string)})
 			}
 		}
+	case params.char == "" && params.elem != "":
+		var single_datas string
+		rtCstStruct := Data{Name: "", Witch_name: "", Called_name: "", Desc: "", Chap: ""}
+		rtCst := reflect.TypeOf(rtCstStruct)
+		var elemList = []string{}
+		for i := 0; i < rtCst.NumField(); i++ {
+			elemList = append(elemList, rtCst.Field(i).Name)
+		}
+		var elemIndex int = -1
+		for i, elemName := range elemList {
+			if elemName == params.elem {
+				elemIndex = i
+				break
+			} else {
+				continue
+			}
+		}
+		target := params.sheet + "!"
+		if elemIndex != -1 {
+			target = target + "ABCDE"[(elemIndex):(elemIndex+1)] + ":" + "ABCDE"[(elemIndex):(elemIndex+1)]
+			resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, target).MajorDimension("COLUMNS").Do()
+			if err != nil {
+				log.Fatalln(err)
+			}
+			if len(resp.Values) == 0 {
+				log.Fatalln("data not found")
+			}
+			single_datas = "["
+			for index, content := range resp.Values[0] {
+				if index == 0 {
+					continue
+				}
+				single_datas += "\"" + content.(string) + "\","
+			}
+			single_datas = single_datas[:len(single_datas)-1]
+			single_datas += "]"
+		} else {
+			err := errors.New("index out of range: jumped out from a number of elements")
+			fmt.Println(err.Error())
+		}
+		return single_datas
 	default:
 		readRange := params.sheet + "!A:E"
 		resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
@@ -173,11 +214,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	case "/api/":
 		if r.URL.Query().Get("character") != "" {
 			char = r.URL.Query().Get("character")
-			fmt.Printf("char\n")
 		}
 		if r.URL.Query().Get("element") != "" {
 			elem = r.URL.Query().Get("element")
-			fmt.Printf("elem\n")
 		}
 	case "/api/イレイナ", "/api/サヤ", "/api/白石定規", "/api/elaina", "/api/saya", "/api/jogi":
 		sheet = r.URL.Path[5:]
@@ -193,11 +232,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if r.URL.Query().Get("character") != "" {
 			char = r.URL.Query().Get("character")
-			fmt.Printf("char")
 		}
 		if r.URL.Query().Get("element") != "" {
 			char = r.URL.Query().Get("element")
-			fmt.Printf("elem")
 		}
 	default:
 		http.NotFound(w, r)
