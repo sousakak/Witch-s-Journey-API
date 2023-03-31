@@ -195,9 +195,12 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	local_index := &IndexPage{"ja"}
+	if r.URL.Query().Get("lang") != "" {
+		local_index = &IndexPage{r.URL.Query().Get("lang")}
+	}
 
 	t, err := template.ParseFiles("index.html")
-	local_index := &IndexPage{"ja"}
 	if err != nil {
 		panic(err.Error())
 	}
