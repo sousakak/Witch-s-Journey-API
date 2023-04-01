@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 	"text/template"
 
 	"github.com/joho/godotenv"
@@ -49,7 +50,7 @@ type IndexPage struct {
 	Lang string
 }
 
-func Api(params Params) string {
+func Api(params Params) []byte {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Printf("環境変数の読み込みに失敗しました: %v", err)
@@ -62,7 +63,7 @@ func Api(params Params) string {
 	}
 
 	raw_datas := map[string]EachData{}
-	var single_datas string
+	var single_datas []string
 	switch {
 	case params.char != "":
 		readRange := params.sheet + "!A:E"
@@ -107,7 +108,7 @@ func Api(params Params) string {
 					}
 				}
 				if elemIndex != -1 {
-					single_datas = "[\"" + rowresp.Values[0][elemIndex].(string) + "\"]"
+					single_datas = append(single_datas, rowresp.Values[0][elemIndex].(string))
 				}
 			} else {
 				v := rowresp.Values[0]
@@ -121,7 +122,6 @@ func Api(params Params) string {
 			fmt.Println(err.Error())
 		}
 	case params.char == "" && params.elem != "":
-		var single_datas string
 		rtCstStruct := EachData{Name: "", Witch_name: "", Called_name: "", Desc: "", Chap: ""}
 		rtCst := reflect.TypeOf(rtCstStruct)
 		var elemList = []string{}
@@ -147,20 +147,16 @@ func Api(params Params) string {
 			if len(resp.Values) == 0 {
 				log.Fatalln("data not found")
 			}
-			single_datas = "["
 			for index, content := range resp.Values[0] {
 				if index == 0 {
 					continue
 				}
-				single_datas += "\"" + content.(string) + "\","
+				single_datas = append(single_datas, content.(string))
 			}
-			single_datas = single_datas[:len(single_datas)-1]
-			single_datas += "]"
 		} else {
 			err := errors.New("index out of range: jumped out from a number of elements")
 			fmt.Println(err.Error())
 		}
-		return single_datas
 	default:
 		readRange := params.sheet + "!A:E"
 		resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
@@ -183,15 +179,19 @@ func Api(params Params) string {
 		}
 	}
 
-	if single_datas != "" {
-		return single_datas
-	} else {
-		bytes, err := json.Marshal(raw_datas)
+	var bytes []byte
+	if len(single_datas) != 0 {
+		bytes, err = json.Marshal(single_datas)
 		if err != nil {
 			log.Fatal(err)
 		}
-		return string(bytes)
+	} else {
+		bytes, err = json.Marshal(raw_datas)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
+	return bytes
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
@@ -227,12 +227,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.URL.Path {
 	case "/api/":
 		if r.URL.Query().Get("character") != "" {
-			char = r.URL.Query().Get("character")
+			char = strings.Title(r.URL.Query().Get("character"))
 		}
 		if r.URL.Query().Get("element") != "" {
-			elem = r.URL.Query().Get("element")
+			elem = strings.Title(r.URL.Query().Get("element"))
 		}
-	case "/api/イレイナ", "/api/サヤ", "/api/白石定規", "/api/elaina", "/api/saya", "/api/jogi":
+	case "/api/イレイナ", "/api/サヤ", "/api/白石定規", "/api/Elaina", "/api/Saya", "/api/Jogi":
 		sheet = r.URL.Path[5:]
 		if m, _ := regexp.MatchString("[a-z]", sheet); m {
 			switch sheet {
@@ -245,10 +245,10 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if r.URL.Query().Get("character") != "" {
-			char = r.URL.Query().Get("character")
+			char = strings.Title(r.URL.Query().Get("character"))
 		}
 		if r.URL.Query().Get("element") != "" {
-			char = r.URL.Query().Get("element")
+			elem = strings.Title(r.URL.Query().Get("element"))
 		}
 	default:
 		http.NotFound(w, r)
@@ -257,7 +257,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	params := Params{sheet: sheet, char: char, elem: elem}
 	json_file := Api(params)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_, err := fmt.Fprint(w, json_file)
+	_, err := w.Write(json_file)
 	if err != nil {
 		return
 	}
