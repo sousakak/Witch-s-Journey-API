@@ -208,9 +208,11 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("index.html")
 	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		panic(err.Error())
 	}
 	if err := t.Execute(w, local_index); err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		panic(err.Error())
 	}
 }
@@ -251,6 +253,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	params := Params{sheet: sheet, char: char, elem: elem}
 	json_file := Api(params)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	_, err := fmt.Fprint(w, json_file)
 	if err != nil {
 		return
