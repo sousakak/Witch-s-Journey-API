@@ -37,7 +37,7 @@ type Params struct {
 	elem  string
 }
 
-type Data struct {
+type EachData struct {
 	Name        string `json:"name"`
 	Witch_name  string `json:"witch_name"`
 	Called_name string `json:"called_name"`
@@ -61,7 +61,7 @@ func Api(params Params) string {
 		log.Fatal(err)
 	}
 
-	raw_datas := []Data{}
+	raw_datas := map[string]EachData{}
 	var single_datas string
 	switch {
 	case params.char != "":
@@ -91,7 +91,7 @@ func Api(params Params) string {
 				log.Fatalln("data not found")
 			}
 			if params.elem != "" {
-				rtCstStruct := Data{Name: "", Witch_name: "", Called_name: "", Desc: "", Chap: ""}
+				rtCstStruct := EachData{Name: "", Witch_name: "", Called_name: "", Desc: "", Chap: ""}
 				rtCst := reflect.TypeOf(rtCstStruct)
 				var elemList = []string{}
 				for i := 0; i < rtCst.NumField(); i++ {
@@ -114,12 +114,15 @@ func Api(params Params) string {
 				for len(v) < 5 {
 					v = append(v, "")
 				}
-				raw_datas = append(raw_datas, Data{Name: v[0].(string), Witch_name: v[1].(string), Called_name: v[2].(string), Desc: v[3].(string), Chap: v[4].(string)})
+				raw_datas[v[0].(string)] = EachData{Name: v[0].(string), Witch_name: v[1].(string), Called_name: v[2].(string), Desc: v[3].(string), Chap: v[4].(string)}
 			}
+		} else {
+			err := errors.New("index out of range: jumped out from a number of elements")
+			fmt.Println(err.Error())
 		}
 	case params.char == "" && params.elem != "":
 		var single_datas string
-		rtCstStruct := Data{Name: "", Witch_name: "", Called_name: "", Desc: "", Chap: ""}
+		rtCstStruct := EachData{Name: "", Witch_name: "", Called_name: "", Desc: "", Chap: ""}
 		rtCst := reflect.TypeOf(rtCstStruct)
 		var elemList = []string{}
 		for i := 0; i < rtCst.NumField(); i++ {
@@ -175,8 +178,8 @@ func Api(params Params) string {
 			for len(row) < 5 {
 				row = append(row, "")
 			}
-			single_data := Data{Name: row[0].(string), Witch_name: row[1].(string), Called_name: row[2].(string), Desc: row[3].(string), Chap: row[4].(string)}
-			raw_datas = append(raw_datas, single_data)
+			single_data := EachData{Name: row[0].(string), Witch_name: row[1].(string), Called_name: row[2].(string), Desc: row[3].(string), Chap: row[4].(string)}
+			raw_datas[row[0].(string)] = single_data
 		}
 	}
 
