@@ -237,23 +237,27 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	sheet := "イレイナ"
 	char := ""
 	elem := ""
-	switch r.URL.Path {
-	case "/api/":
+	if r.URL.Path != "/api/" {
+		http.NotFound(w, r)
+		return
+	}
+	switch r.URL.Query().Get("introducer") {
+	case "":
 		if r.URL.Query().Get("character") != "" {
 			char = strings.Title(r.URL.Query().Get("character"))
 		}
 		if r.URL.Query().Get("element") != "" {
 			elem = strings.Title(r.URL.Query().Get("element"))
 		}
-	case "/api/イレイナ", "/api/サヤ", "/api/白石定規", "/api/Elaina", "/api/Saya", "/api/Jogi":
-		sheet = r.URL.Path[5:]
+	case "イレイナ", "サヤ", "白石定規", "Elaina", "Saya", "Jogi":
+		sheet = r.URL.Query().Get("introducer")
 		if m, _ := regexp.MatchString("[a-z]", sheet); m {
 			switch sheet {
-			case "elaina":
+			case "Elaina":
 				sheet = "イレイナ"
-			case "saya":
+			case "Saya":
 				sheet = "サヤ"
-			case "jogi":
+			case "Jogi":
 				sheet = "白石定規"
 			}
 		}
@@ -264,7 +268,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			elem = strings.Title(r.URL.Query().Get("element"))
 		}
 	default:
-		http.NotFound(w, r)
+		var emptyData []string
+		bytes, err := json.Marshal(emptyData)
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = w.Write(bytes)
 		return
 	}
 	params := Params{sheet: sheet, char: char, elem: elem}
