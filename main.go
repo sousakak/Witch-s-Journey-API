@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -48,6 +49,18 @@ type EachData struct {
 
 type IndexPage struct {
 	Lang string
+}
+
+func Handle404(w http.ResponseWriter, r *http.Request) {
+	f, err := ioutil.ReadFile("404.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	} else {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, string(f))
+	}
 }
 
 func Api(params Params) []byte {
@@ -196,7 +209,7 @@ func Api(params Params) []byte {
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		Handle404(w, r)
 		return
 	}
 	var local_index *IndexPage
