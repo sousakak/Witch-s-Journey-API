@@ -642,6 +642,10 @@ main .content-section .content-card .content-text {
   padding-top: 5px;
 }
 
+main .content-section .content-card hr {
+  margin: 10px auto;
+}
+
 footer .waves-svg {
   position: relative;
   margin-bottom: -7px;

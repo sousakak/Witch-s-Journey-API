@@ -164,14 +164,99 @@
                                     <!--  -->
                                 {{- else if eq .Lang "ja"}}
                                     APIは、URLで指定することによりデータを返します。データはJSON形式です。
-                                    <ul>
-                                        <li>
-                                            <a href="/api">/api</a> — キャラクターについての全てのリストを返します。
-                                        </li>
-                                    </ul>
                                 {{- else}}
                                     <!--  -->
                                 {{- end}}
+                                <br />
+                                {{- if eq .Lang "en" }}
+                                    <!--  -->
+                                {{- else if eq .Lang "ja"}}
+                                    <a href="/api">/api</a> — 何も指定せずにapiページにアクセスすると、キャラクターについての全てのリストを返します。
+                                {{- else}}
+                                    <!--  -->
+                                {{- end}}
+                                <br />
+                                {{- if eq .Lang "en" }}
+                                    <!--  -->
+                                {{- else if eq .Lang "ja"}}
+                                    いくつかのクエリパラメータを利用して、特定の情報のみを取得することができます：
+                                {{- else}}
+                                    <!--  -->
+                                {{- end}}
+                                <ul>
+                                    <li>
+                                        {{- if eq .Lang "en" }}
+                                            <!--  -->
+                                        {{- else if eq .Lang "ja"}}
+                                            <code>introducer</code> — キャラクターを紹介するキャラクター。主に紹介文の口調が変わる他、呼び名も変わります。指定されたキャラクターによる紹介情報がない場合、<code>null</code>が返ります。例：<code>イレイナ</code>, <code>サヤ</code>&nbsp;<small>※英語の頭文字大文字のエイリアスも存在します</small>
+                                        {{- else}}
+                                            <!--  -->
+                                        {{- end}}
+                                    </li>
+                                    <li>
+                                        {{- if eq .Lang "en" }}
+                                            <!--  -->
+                                        {{- else if eq .Lang "ja"}}
+                                        <code>character</code> — 情報を取得するキャラクター。不明なキャラクターが渡された場合、空のJSONが返ります。例：<code>イレイナ</code>, <code>サヤ</code>, <code>アルテ</code>&nbsp;<small>※英語のエイリアスは現状設定されていません</small>
+                                        {{- else}}
+                                            <!--  -->
+                                        {{- end}}
+                                    </li>
+                                    <li>
+                                        {{- if eq .Lang "en" }}
+                                            <!--  -->
+                                        {{- else if eq .Lang "ja"}}
+                                        <code>element</code> — 取得する情報。以下から選んでください：<code>name</code>, <code>witch_name</code>, <code>called_name</code>, <code>desc</code>, <code>chap</code>；それぞれ「名前」「魔女名（或いは種族名）」「呼称」「説明」「初出の巻と章」です。
+                                        {{- else}}
+                                            <!--  -->
+                                        {{- end}}
+                                    </li>
+                                </ul>
+                                <hr />
+                                {{- if eq .Lang "en" }}
+                                    Tips: 
+                                {{- else if eq .Lang "ja"}}
+                                    Tips: 現状introducerはデフォルトではイレイナが設定されており、イレイナの口調でのキャラクターの紹介が行われています。ここでは原作に順守して一部イレイナが知らない情報が書かれていない可能性があります。introducerに作者である白石定規先生の名前を「白石定規」或いは「Jogi」と設定すると、作者目線からの（公開されている）情報が書かれているため、情報量は最も多いでしょう。
+                                {{- else}}
+                                    Tips: 
+                                {{- end}}
+                                <hr />
+                                {{- if eq .Lang "en" }}
+                                    Examples:
+                                {{- else if eq .Lang "ja"}}
+                                    例：
+                                {{- else}}
+                                    Examples:
+                                {{- end}}
+                                <ul>
+                                    <li>
+                                        {{- if eq .Lang "en" }}
+                                            <!--  -->
+                                        {{- else if eq .Lang "ja"}}
+                                            <a href="/api/?character=イレイナ">/api/?character=イレイナ</a> — イレイナについての情報が返ります。
+                                        {{- else}}
+                                            <!--  -->
+                                        {{- end}}
+                                    </li>
+                                    <li>
+                                        {{- if eq .Lang "en" }}
+                                            <!--  -->
+                                        {{- else if eq .Lang "ja"}}
+                                        <a href="/api/?character=イレイナ&element=name">/api/?character=イレイナ&element=name</a> — イレイナの名前のみが返ります。
+                                        {{- else}}
+                                            <!--  -->
+                                        {{- end}}
+                                    </li>
+                                    <li>
+                                        {{- if eq .Lang "en" }}
+                                            <!--  -->
+                                        {{- else if eq .Lang "ja"}}
+                                            <a href="/api/?element=name">/api/?element=name</a> — 全キャラクターの名前のリストが返ります。
+                                        {{- else}}
+                                            <!--  -->
+                                        {{- end}}
+                                    </li>
+                                </ul>
                             </p>
                         </div>
                     </div>
