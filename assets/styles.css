@@ -84,6 +84,7 @@ header .header-list-ul {
   overflow: visible;
   list-style: none;
   margin: 5px 5%;
+  padding-left: 0;
   width: 50%;
   z-index: 2;
 }
@@ -93,8 +94,9 @@ header .header-list-ul .header-list-li {
   height: auto;
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
-  flex-grow: 2;
-  padding: auto 10px;
+  width: 33.34%;
+  padding-top: auto;
+  padding-bottom: auto;
   border-right: 1px solid rgba(187, 187, 187, 0.8);
   border-bottom: 1px solid rgba(187, 187, 187, 0.8);
   border-bottom-width: 3px;
@@ -136,8 +138,9 @@ header .header-list-ul .header-list-dropdown {
   height: auto;
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
-  flex-grow: 1;
-  padding: auto 10px;
+  width: 16.67%;
+  padding-top: auto;
+  padding-bottom: auto;
   border-right: 1px solid rgba(187, 187, 187, 0.8);
   border-bottom: 1px solid rgba(187, 187, 187, 0.8);
   border-bottom-width: 3px;
@@ -163,6 +166,11 @@ header .header-list-ul .header-list-dropdown:hover .header-list-dropdown-ul {
   transition: opacity 1s 0s ease;
 }
 
+header .header-list-ul .header-list-dropdown:last-child > .header-list-dropdown-ul {
+  left: initial;
+  right: 5%;
+}
+
 header .header-list-ul .header-list-dropdown .header-list-dropdown-button {
   color: #191919;
   text-transform: uppercase;
@@ -175,7 +183,7 @@ header .header-list-ul .header-list-dropdown .header-list-dropdown-ul {
   position: absolute;
   padding: 0;
   top: 45px;
-  width: 11.1%;
+  width: 16.67%;
   border-left: initial;
   visibility: hidden;
   opacity: 0;

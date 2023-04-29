@@ -20,6 +20,7 @@ $title-font: 'M PLUS Rounded 1c', sans-serif;
 $menu-font: 'Sawarabi Gothic', sans-serif;
 $container-box-border: 1px solid rgba($color: #BBBBBB, $alpha: 0.8);
 $container-box-background: radial-gradient(circle farthest-side at 0% 3%, rgba(233, 233, 233, 0.7) 33%, rgba(207, 207, 207, 0.7) 100%);
+$container-box-base-width: 16.67%;
 
 %animation-default {
     opacity: 1 !important;
@@ -40,12 +41,14 @@ $container-box-background: radial-gradient(circle farthest-side at 0% 3%, rgba(2
 }
 
 @mixin header-list-style($container: 2) {
+    // container: 2*2 + 1*2 (size*unit)
     display: block;
     height: auto;
     -webkit-box-flex: 1;
     -ms-flex-positive: 1;
-    flex-grow: $container;
-    padding: auto 10px;
+    width: $container * $container-box-base-width;
+    padding-top: auto;
+    padding-bottom: auto;
     border-right: $container-box-border;
     border-bottom: $container-box-border;
     border-bottom-width: 3px;
@@ -346,6 +349,7 @@ header {
         overflow: visible;
         list-style: none;
         margin: 5px 5%;
+        padding-left: 0;
         width: 50%;
         z-index: 2;
         .header-list-li {
@@ -376,6 +380,10 @@ header {
                     transition: opacity 1s 0s ease;
                 }
             }
+            &:last-child > .header-list-dropdown-ul {
+                left: initial;
+                right: 5%;
+            }
             .header-list-dropdown-button {
                 @include header-list-link-style()
             }
@@ -384,7 +392,7 @@ header {
                 position: absolute;
                 padding: 0;
                 top: 45px;
-                width: 11.1%;
+                width: $container-box-base-width;
                 border-left: initial;
                 visibility: hidden;
                 opacity: 0;
