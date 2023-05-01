@@ -175,27 +175,27 @@
                         <div class="content-text">
                             <p>
                                 {{- if eq .Lang "en" }}
-                                    <!--  -->
+                                    API returns a data when options are specified in the URL. Datas are in JSON format.
                                 {{- else if eq .Lang "ja"}}
                                     APIは、URLで指定することによりデータを返します。データはJSON形式です。
                                 {{- else}}
-                                    <!--  -->
+                                    API returns a data when options are specified in the URL. Datas are in JSON format.
                                 {{- end}}
                                 <br />
                                 {{- if eq .Lang "en" }}
-                                    <!--  -->
+                                <a href="/api">/api</a> — Without the option, all information for all characters is returned.
                                 {{- else if eq .Lang "ja"}}
                                     <a href="/api">/api</a> — 何も指定せずにapiページにアクセスすると、キャラクターについての全てのリストを返します。
                                 {{- else}}
-                                    <!--  -->
+                                    Without the option, all information for all characters is returned.
                                 {{- end}}
                                 <br />
                                 {{- if eq .Lang "en" }}
-                                    <!--  -->
+                                    Query parameters can be used to limit the information to be retrieved: 
                                 {{- else if eq .Lang "ja"}}
                                     いくつかのクエリパラメータを利用して、特定の情報のみを取得することができます：
                                 {{- else}}
-                                    <!--  -->
+                                    Query parameters can be used to limit the information to be retrieved: 
                                 {{- end}}
                                 <ul>
                                     <li>
